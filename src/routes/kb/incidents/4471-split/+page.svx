@@ -19,7 +19,7 @@ merged them, but they have different causes and need different fixes. The parser
 will not close all of them.
 
 <Callout kind="warn">
-Each problem below now has a ticket of its own. Count a report once, under its problem, not under #4471.
+Each problem below now has a ticket of its own. Merge new reports into the problem's ticket, not into #4471.
 </Callout>
 
 ## The problems in #4471
@@ -40,9 +40,9 @@ hint.
 
 **`one-day`**: the date moves by one day, not by a swap. *"Client in Lisbon got Tuesday. Client in
 Toronto got Monday. Same meeting."* *"Every booking in June is one day off. Only June."* The desk
-already read these reports as a one-day move (`desk-notes.json`), but filed them under `parser` by
-tenant. A one-day move between time zones is a different bug from a day/month swap, so it gets its own
-ticket.
+already read these reports as a one-day move (`desk-notes.json`) and counts them where they are filed,
+under `parser` by tenant. A one-day move between time zones is a different bug from a day/month swap,
+so it gets its own ticket as well.
 
 ## Why one ticket hid them
 
@@ -56,6 +56,7 @@ ticket.
 
 1. New date reports: place them with `#lib/kb/problems` (tenant, form, channel), not by subject.
 2. Merge into the problem's own ticket, not into #4471.
-3. A report that reads as a one-day move goes to `one-day`, whatever its tenant.
+3. A report that reads as a one-day move stays counted where it is filed, and is also linked to the
+   `one-day` ticket, whatever its tenant.
 
 <RenderStamp {signature} />

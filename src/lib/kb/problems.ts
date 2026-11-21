@@ -19,9 +19,9 @@ export type ProblemGroup = {
   lastSeen: string;
 };
 
-export function problemOf(r: Report, t: Tenant | undefined, oneDayMove: readonly string[]): Problem {
-  if (oneDayMove.includes(r.id)) return 'one-day';
-  return causeOf(r, t) ?? 'unplaced';
+export function problemsOf(r: Report, t: Tenant | undefined, oneDayMove: readonly string[]): Problem[] {
+  const filed: Problem = causeOf(r, t) ?? 'unplaced';
+  return oneDayMove.includes(r.id) ? [filed, 'one-day'] : [filed];
 }
 
 const tally = (values: string[]) =>
@@ -40,8 +40,7 @@ export function groupByProblem(
 ): ProblemGroup[] {
   const byProblem = new Map<Problem, Report[]>();
   for (const r of reports) {
-    const p = problemOf(r, tenantOf(r), oneDayMove);
-    byProblem.set(p, [...(byProblem.get(p) ?? []), r]);
+    for (const p of problemsOf(r, tenantOf(r), oneDayMove)) byProblem.set(p, [...(byProblem.get(p) ?? []), r]);
   }
   return [...byProblem.entries()]
     .map(([problem, rs]) => {
@@ -59,6 +58,16 @@ export function groupByProblem(
     .sort((a, b) => b.reports.length - a.reports.length);
 }
 
+export const isFiled = (g: ProblemGroup) => g.problem !== 'one-day';
+
 export function intakeMisses(groups: ProblemGroup[]): number {
-  return groups.reduce((n, g) => n + g.reports.filter((r) => r.meta.intakeTag !== g.problem).length, 0);
+  return groups.filter(isFiled).reduce((n, g) => n + g.reports.filter((r) => r.meta.intakeTag !== g.problem).length, 0);
+}
+
+export function alsoFiledUnder(g: ProblemGroup, groups: ProblemGroup[]): Record<string, number> {
+  if (isFiled(g)) return {};
+  const ids = new Set(g.reports.map((r) => r.id));
+  return Object.fromEntries(
+    groups.filter(isFiled).map((f) => [f.problem, f.reports.filter((r) => ids.has(r.id)).length] as const).filter(([, n]) => n > 0),
+  );
 }

@@ -3,7 +3,7 @@
   import notes from '#lib/data/desk-notes.json';
   import type { Report } from '#lib/kb/causes';
   import { tenantOf } from '#lib/kb/locales';
-  import { PROBLEM_TITLES, groupByProblem, intakeMisses, mergedInto, type Problem } from '#lib/kb/problems';
+  import { PROBLEM_TITLES, alsoFiledUnder, groupByProblem, intakeMisses, mergedInto, type Problem } from '#lib/kb/problems';
 
   let { ticket, issues = {} }: { ticket: number; issues?: Partial<Record<Problem, string>> } = $props();
 
@@ -46,6 +46,15 @@
     {/each}
   </tbody>
 </table>
+
+{#each groups as g (g.problem)}
+  {#each Object.entries(alsoFiledUnder(g, groups)) as [filed, n] (filed)}
+    <p class="note">
+      The {n} <code>{g.problem}</code> reports are also counted under <code>{filed}</code>, where the desk files them by
+      tenant. They are fixed under <code>{g.problem}</code>.
+    </p>
+  {/each}
+{/each}
 
 {#each groups as g (g.problem)}
   <details>
