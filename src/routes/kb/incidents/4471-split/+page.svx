@@ -4,7 +4,7 @@ title: '#4471 · one ticket, separate problems'
 owner: support desk
 status: accepted
 reviewed: 2026-11-21
-signature: aXenDeveloper
+signature: v1.eyJzdWIiOiI3NjAiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5NTI4MjAzMiwiZXhwIjoxNzk1MzY4NDMyfQ.2sbTzLHbnFhnynOK63dzeoFpkczj3Ows5yjUN3BvjO8
 ---
 
 <script>
