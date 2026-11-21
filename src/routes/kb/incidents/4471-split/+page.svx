@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 · one ticket, separate problems'
 owner: support desk
-status: proposed
+status: accepted
 reviewed: 2026-11-21
 signature: aXenDeveloper
 ---
@@ -25,6 +25,16 @@ Each problem below now has a ticket of its own. Merge new reports into the probl
 ## The problems in #4471
 
 <ProblemTable ticket={4471} issues={{ parser: 'https://github.com/aXenDeveloper/s01e03-what-it-shows/issues/1', hint: 'https://github.com/aXenDeveloper/s01e03-what-it-shows/issues/2', 'one-day': 'https://github.com/aXenDeveloper/s01e03-what-it-shows/issues/3' }} />
+
+## Where each one stands
+
+Engineering closed #4471 on 5 October.
+
+- **`parser`**: fixed by `fix(dates): parse dd/mm for eu locales`. Ticket closed as completed.
+- **`hint`**: won't fix. The `booking-v3` form is retired, so no new reports can come in this way.
+  Ticket closed as not planned.
+- **`one-day`**: open. The parser fix reads day and month in the right order; it does not stop a date
+  moving by one day between time zones. Watch for new one-day reports after the fix.
 
 ## How each one is told apart
 
