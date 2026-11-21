@@ -1,0 +1,61 @@
+---
+layout: runbook
+title: '#4471 · one ticket, separate problems'
+owner: support desk
+status: proposed
+reviewed: 2026-11-21
+signature: aXenDeveloper
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Read report by report, it holds
+more than one problem. They share subject lines, so [decision 0001](/kb/decisions/0001-dedupe-by-subject)
+merged them, but they have different causes and need different fixes. The parser fix that is queued
+will not close all of them.
+
+<Callout kind="warn">
+Each problem below now has a ticket of its own. Count a report once, under its problem, not under #4471.
+</Callout>
+
+## The problems in #4471
+
+<ProblemTable ticket={4471} issues={{ parser: 'https://github.com/aXenDeveloper/s01e03-what-it-shows/issues/1', hint: 'https://github.com/aXenDeveloper/s01e03-what-it-shows/issues/2', 'one-day': 'https://github.com/aXenDeveloper/s01e03-what-it-shows/issues/3' }} />
+
+## How each one is told apart
+
+**`parser`**: the shared parser reads every date month first. Every tenant on file writes the day
+first, so day and month swap. It comes in through every channel. *"Booked for 2 July. The invite says
+7 February."*
+
+**`hint`**: tenants on `booking-v3` show `MM/DD/YYYY` under the date field. People type what the hint
+says, and the form then reads the date the tenant's way, day first. It only comes in through the
+booking form, and only from `booking-v3` tenants. The swap looks the same as `parser`, so subject and
+body cannot tell them apart: the tenant's form and the channel can. Fixing the parser does not fix the
+hint.
+
+**`one-day`**: the date moves by one day, not by a swap. *"Client in Lisbon got Tuesday. Client in
+Toronto got Monday. Same meeting."* *"Every booking in June is one day off. Only June."* The desk
+already read these reports as a one-day move (`desk-notes.json`), but filed them under `parser` by
+tenant. A one-day move between time zones is a different bug from a day/month swap, so it gets its own
+ticket.
+
+## Why one ticket hid them
+
+- Decision 0001 merges on subject alone. *"Booking on the wrong date"* is the same subject for a
+  `parser` report and a `hint` report.
+- Intake tags a report from the reporter's browser, not from the tenant. The tag is a guess, and it
+  disagrees with the problem often (see the table).
+- The export repeats reports where its pages overlap. Count unique ids only.
+
+## What the desk does now
+
+1. New date reports: place them with `#lib/kb/problems` (tenant, form, channel), not by subject.
+2. Merge into the problem's own ticket, not into #4471.
+3. A report that reads as a one-day move goes to `one-day`, whatever its tenant.
+
+<RenderStamp {signature} />
